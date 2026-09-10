@@ -1,59 +1,32 @@
-# [P4-ETAPA-01] Especificação do Problema: Validador de Matrícula Curricular e Dependências
+# Visão Geral do Problema: Validador de Matrícula Curricular e Dependências
 
-## 1. Descrição do problema
-Em instituições de ensino superior, o processo de matrícula exige que os estudantes respeitem a hierarquia de dependências das disciplinas. O problema consiste em automatizar a validação de pedidos de matrícula, cruzando o histórico acadêmico do aluno com a grade curricular vigente para garantir que nenhuma etapa obrigatória seja ignorada.
+**Tag:** `[P4-ETAPA-01]`
 
-## 2. Objetivo
-O sistema deverá ser capaz de processar uma solicitação de matrícula, avaliando o histórico escolar de um aluno e determinando quais disciplinas solicitadas podem ser cursadas e quais devem ser bloqueadas por falta de pré-requisitos.
+---
 
-## 3. Entradas
-O sistema recebe três conjuntos de dados:
-*   Grade Curricular: Um dicionário ou lista estruturada contendo os códigos de todas as disciplinas ofertadas e seus respectivos pré-requisitos.
-*   Histórico do Aluno: Uma lista contendo os códigos das disciplinas que o aluno já concluiu com aprovação.
-*   Solicitação de Matrícula: Uma lista contendo os códigos das disciplinas que o aluno deseja cursar no semestre atual.
+## 1. Contexto e Motivação
+Nas instituições de ensino superior, a estrutura acadêmica é organizada em uma malha de disciplinas interligadas por requisitos de precedência. Para que um estudante possa se matricular em disciplinas avançadas, a instituição exige a comprovação de domínio nos conteúdos fundamentais ministrados em etapas anteriores (os chamados pré-requisitos).
 
-## 4. Saídas
-O sistema deverá produzir dois relatórios ou listas resultantes:
-*   Disciplinas Deferidas: Códigos das disciplinas aprovadas para matrícula.
-*   Disciplinas Indeferidas: Códigos das disciplinas rejeitadas, acompanhados do motivo exato (ex: "Falta o pré-requisito X" ou "Disciplina já cursada").
+Atualmente, o processo manual ou semi-automatizado de análise de históricos pode gerar gargalos operacionais e erros de validação, permitindo matrículas indevidas ou bloqueando indevidamente a progressão de alunos elegíveis. 
 
-## 5. Regras do problema
-*   Para uma disciplina ser deferida, o aluno deve possuir em seu histórico de aprovação todos os pré-requisitos exigidos por ela na grade curricular.
-*   Disciplinas que não possuem pré-requisitos na grade curricular são deferidas automaticamente, desde que não tenham sido cursadas.
-*   Se uma disciplina solicitada já constar no histórico de disciplinas concluídas do aluno, ela deve ser obrigatoriamente indeferida.
+O foco deste projeto é construir um motor de decisão capaz de analisar o estado acadêmico de um estudante e responder com precisão se um conjunto de disciplinas solicitadas pode ou não ser deferido.
 
-## 6. Casos de exemplo
-*   **Entrada:** Histórico vazio; Solicita: "Algoritmos 1" (sem pré-requisito) → **Saída esperada:** "Algoritmos 1" Deferida.
-*   **Entrada:** Histórico ("Algoritmos 1"); Solicita: "Algoritmos 2" (Pré-requisito: "Algoritmos 1") → **Saída esperada:** "Algoritmos 2" Deferida.
-*   **Entrada:** Histórico vazio; Solicita: "Algoritmos 2" (Pré-requisito: "Algoritmos 1") → **Saída esperada:** "Algoritmos 2" Indeferida (Falta: "Algoritmos 1").
-*   **Entrada:** Histórico ("Cálculo 1"); Solicita: "Cálculo 1" → **Saída esperada:** "Cálculo 1" Indeferida (Já cursada).
-*   **Entrada:** Histórico ("Matemática Discreta"); Solicita: "Estruturas de Dados" (Pré-requisitos: "Algoritmos 1" e "Matemática Discreta") → **Saída esperada:** "Estruturas de Dados" Indeferida (Falta: "Algoritmos 1").
+---
 
-## 7. Casos-limite
-*   O aluno insere o código da mesma disciplina múltiplas vezes na solicitação de matrícula do mesmo semestre.
-*   O aluno solicita uma disciplina com múltiplos pré-requisitos possuindo apenas uma parte deles no histórico.
-*   O aluno solicita uma disciplina com um código inexistente na Grade Curricular oficial fornecida.
+## 2. O Problema Computacional
+O problema central consiste em processar um grafo direcionado acíclico (DAG) implícito — representado pelas dependências entre disciplinas — e confrontá-lo com um conjunto de fatos consumados (o histórico de aprovações do aluno).
 
-## 8. Restrições
-*   O sistema não fará validação de conflitos de horários entre as turmas/disciplinas solicitadas.
-*   Não haverá limite máximo ou mínimo de créditos por solicitação de matrícula.
-*   O sistema não terá interface gráfica (GUI), operando estritamente através da entrada e processamento lógico dos dados.
+A cada solicitação de matrícula no semestre corrente, o sistema deve responder a três perguntas fundamentais para cada matéria solicitada:
+1. O aluno já concluiu esta disciplina anteriormente?
+2. O aluno cumpre integralmente todos os pré-requisitos exigidos por esta disciplina?
+3. A solicitação apresenta inconsistências (como duplicidades ou matérias inexistentes na grade)?
 
-## 9. Principais conceitos do domínio
-*   Disciplina.
-*   Pré-requisito.
-*   Histórico Acadêmico.
-*   Status de Matrícula (Deferido/Indeferido).
+---
 
-## 10. Adequação aos quatro paradigmas
-O problema mantém a mesma estrutura conceitual ao longo de todo o projeto, mas a decomposição da solução e o controle de fluxo mudam em cada modelo de programação:
-*   **Imperativo:** Focará no controle de fluxo explícito e na alteração do estado de variáveis e arrays através de laços de repetição tradicionais (como `for` ou `while`) para checar o histórico contra a grade.
-*   **Orientado a Objetos:** Distribuirá as responsabilidades. Um objeto `Controlador` ou `Validador` receberá instâncias de `Aluno` e solicitará validações às instâncias de `Disciplina`, priorizando o encapsulamento e a troca de mensagens.
-*   **Funcional:** Garantirá a ausência de efeitos colaterais tratando o histórico e a solicitação como listas estritamente imutáveis. O cruzamento das aprovações com os pré-requisitos será feito puramente através de funções de alta ordem (map, filter) e operações de conjunto.
-*   **Lógico:** O histórico de aprovação do aluno e a grade de disciplinas atuarão como a base de dados em forma de fatos. A liberação de matrícula será uma regra declarativa processada pelo mecanismo de inferência e unificação nativo do paradigma lógico.
+## 3. Justificativa de Adequação aos 4 Paradigmas
+Este problema foi escolhido por possuir uma lógica de negócio clara que permite ser modelada e decomposta de formas completamente distintas em cada um dos quatro paradigmas estudados na disciplina:
 
-## 11. Linguagens inicialmente consideradas
-*   **Imperativo (C):** Linguagem com que estou mais confortável em trabalhar com loops
-*   **Orientado a Objetos (C#):** Aprendi a usar C# em POO e acredito que pode ser uma boa linguagem para resolver esse problema.
-*   **Funcional (Python):** Python provavelmente vai ser a que irei usar para esse.
-*   **Lógico (Prolog):** Não sei do porque ainda, mas é a mais recomendada para esse tipo de paradigma.
+* **Paradigma Imperativo:** O problema permite explorar o controle explícito de estado (variáveis mutáveis e sinalizadores) e a varredura sequencial de coleções através de laços de repetição (`for`/`while`), atualizando contadores e vetores de resultado passo a passo.
+* **Paradigma Orientado a Objetos:** Permite abstrair os conceitos do domínio em entidades bem delimitadas (`Aluno`, `Disciplina`, `GradeCurricular`, `Validador`). A solução focará em encapsulamento, responsabilidades bem distribuídas e troca de mensagens entre objetos.
+* **Paradigma Funcional:** O problema se encaixa perfeitamente em transformações sobre dados imutáveis. O histórico e as solicitações são tratados como listas puras, e a validação é resolvida com funções de alta ordem (`map`, `filter`), transparência referencial e operações de teoria dos conjuntos sem efeitos colaterais.
+* **Paradigma Lógico:** É o cenário ideal para o modelo declarativo. A grade de disciplinas e o histórico do aluno são declarados diretamente como uma base de conhecimento (fatos), enquanto as regras de pré-requisito são expressas como predicados lógicos. O motor de inferência da linguagem resolve o problema por unificação e retrocesso nativos.

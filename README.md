@@ -8,7 +8,7 @@
 
 ## Visão Geral do Projeto
 Este repositório é dedicado ao desenvolvimento de soluções para um mesmo problema computacional explorando quatro paradigmas de programação distintos:
-* **Programação Imperativa** (C / Python)
+* **Programação Imperativa** (C)
 * **Programação Orientada a Objetos** (C#)
 * **Programação Funcional** (Python)
 * **Programação Lógica** (Prolog)

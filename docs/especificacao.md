@@ -50,7 +50,7 @@ Avaliar a solicitação de matrícula de um aluno e determinar quais disciplinas
 * **Lógico:** O histórico do aluno e a grade atuarão como a base de dados em forma de fatos. A liberação de matrícula será uma regra declarativa processada pelo mecanismo de inferência e unificação nativo do paradigma lógico.
 
 ## 11. Linguagens Inicialmente Consideradas
-* **Imperativo (C ou Python):** Utilizará controle de fluxo explícito, estruturas de repetição e verificação sequencial alterando o estado do sistema.
+* **Imperativo (C):** Utilizará controle de fluxo explícito, estruturas de repetição e verificação sequencial alterando o estado do sistema.
 * **Orientado a Objetos (C#):** Aproveitará o encapsulamento em classes (`Aluno`, `Disciplina`, `Validador`) e a troca de mensagens entre objetos com tipagem estática forte.
 * **Funcional (Python):** Tratará o histórico do aluno como uma estrutura de dados imutável, utilizando funções puras de alta ordem e operações de conjuntos matemáticos sem causar efeitos colaterais.
 * **Lógico (Prolog):** O histórico e as disciplinas serão declarados como base de conhecimento (fatos), e os pré-requisitos atuarão como as regras. O motor de inferência provará automaticamente se o aluno pode ou não cursar a matéria.

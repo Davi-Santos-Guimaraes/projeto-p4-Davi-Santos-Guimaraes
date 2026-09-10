@@ -43,7 +43,7 @@ O sistema deverá produzir dois relatórios ou listas resultantes:
 *   Disciplina.
 *   Pré-requisito.
 *   Histórico Acadêmico.
-*   Status de Matrícula (Deferido/Indeferido).
+*   Status de Matrícula (Deferido/Indeferido). 
 
 ## 10. Adequação aos quatro paradigmas
 O problema mantém a mesma estrutura conceitual ao longo de todo o projeto, mas a decomposição da solução e o controle de fluxo mudam em cada modelo de programação:

@@ -79,7 +79,7 @@ Possíveis linguagens para cada paradigma e justificativas:
 ---
 
 ## Links
-*  [Casos de Teste](./docs/casos.md)
+*  [Casos de Teste](./testes/casos.md)
 
 ## Estrutura do Repositório
 

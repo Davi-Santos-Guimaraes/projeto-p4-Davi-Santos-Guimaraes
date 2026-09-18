@@ -86,6 +86,7 @@ projeto-p4-Davi-Santos-Guimaraes/
 ├── README.md
 │
 ├── docs/
+│   ├── [Casos de Teste](./docs/casos.md)
 │   ├── problema.md
 │   ├── especificacao.md
 │   ├── decisoes.md

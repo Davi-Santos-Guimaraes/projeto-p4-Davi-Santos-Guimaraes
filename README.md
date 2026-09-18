@@ -2,7 +2,7 @@
 
 **Aluno:** Davi Santos Guimarães  
 **Disciplina:** Paradigmas de Linguagens de Programação  
-**Tag Atual:** `[P4-ETAPA-01]`
+**Tag Atual:** `[P4-ETAPA-02]`
 
 ---
 
@@ -78,6 +78,9 @@ Possíveis linguagens para cada paradigma e justificativas:
 
 ---
 
+## Links
+*  [Casos de Teste](./docs/casos.md)
+
 ## Estrutura do Repositório
 
 ```text
@@ -86,7 +89,7 @@ projeto-p4-Davi-Santos-Guimaraes/
 ├── README.md
 │
 ├── docs/
-│   ├── [Casos de Teste](./docs/casos.md)
+│   ├── casos.md
 │   ├── problema.md
 │   ├── especificacao.md
 │   ├── decisoes.md

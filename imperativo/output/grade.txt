@@ -1,0 +1,5 @@
+ALG1 Algoritmos_1 0
+ALG2 Algoritmos_2 1 ALG1
+MAT1 Matematica_Discreta 0
+ED1 Estruturas_de_Dados 2 ALG1 MAT1
+FIS1 F�sica 1 MAT1

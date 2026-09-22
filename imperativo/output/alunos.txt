@@ -1,0 +1,3 @@
+1001 Joao_Silva 3 ALG1 MAT1 ALG2
+1002 Maria_Souza 1 ALG1
+9999 Ana 0

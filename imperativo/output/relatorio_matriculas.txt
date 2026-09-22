@@ -1,0 +1,2 @@
+Aluno: Joao_Silva      | Materia: Algoritmos_2         | Status: DEFERIDA   | Motivo: Requisitos cumpridos
+Aluno: Joao_Silva      | Materia: F¡sica               | Status: INDEFERIDA | Motivo: Falta o pre-requisito 'ED1'

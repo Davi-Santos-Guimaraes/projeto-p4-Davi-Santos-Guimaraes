@@ -39,3 +39,23 @@ Subprogramas (funções) representam computações parametrizadas e necessitam d
 A solução é imperativa porque o foco analítico da programação está no **"COMO"** a máquina deve realizar a tarefa, passo a passo. A execução do programa é inteiramente conduzida pela mudança constante dos valores armazenados.
 *   Diferente do paradigma Orientado a Objetos, os tipos de dados e funções estão separados (não existe encapsulamento isolando regras de negócio em instâncias). As linguagens como C tradicional operam baseadas em registros (`structs`) repassados para rotinas independentes.
 *   Diferente da programação Funcional e Lógica (focadas no **"O QUÊ"** fazer), o programa em C não trabalha com regras declarativas, fechamentos abstratos de ambiente ou transparência referencial onde variáveis são imutáveis. O algoritmo consiste essencialmente em gerenciar laços de índices e navegar em memória RAM arranjo por arranjo de forma explícita e manual para resolver as validações do grafo de dependências das disciplinas, limitando-se ao fluxo de execução da máquina física Von Neumann subjacente.
+
+### 7. Validação dos Casos da Etapa 2
+Os casos de teste definidos na Etapa 2 serviram como referência analítica para validar o comportamento computacional do validador de matrícula implementado.
+
+#### 7.1 Casos Normais
+*   **NORM-01 (Disciplina sem pré-requisito):** Atendido. A função `processar_matricula_aluno` localiza a disciplina na grade e valida seus pré-requisitos. Como a quantidade de pré-requisitos é zero, o sinalizador `cumpre_requisitos` permanece verdadeiro e a matrícula é deferida com sucesso.
+*   **NORM-02 (Pré-requisito cumprido):** Atendido. Para cada dependência cadastrada, o programa utiliza `ja_cursada()` iterativamente na matriz do histórico do aluno, confirmando a presença e liberando a matrícula.
+*   **NORM-03 (Pré-requisito não cumprido):** Atendido. O sistema interrompe o fluxo por meio do comando `break` ao não encontrar o requisito, disparando a rotina de indeferimento e gravando a ocorrência no relatório em disco.
+*   **NORM-04 (Disciplina já cursada):** Atendido. A validação de `ja_cursada()` executa prioritariamente logo na entrada da rotina, bloqueando requisições duplicadas de histórico.
+*   **NORM-05 (Múltiplos pré-requisitos cumpridos):** Atendido. O laço `for` varre todas as dependências da grade; se qualquer uma falhar, o processo é abortado imediatamente.
+*   **NORM-06, NORM-07 e NORM-09 (Solicitações múltiplas/mistas):** Parcialmente atendidos de forma conceitual. O motor do programa valida cada disciplina com total exatidão, mas a interface imperativa de console foi estruturada para processar uma solicitação por vez em ciclos iterativos de menu, e não listas em lote simultâneo.
+*   **NORM-08 e NORM-10 (Histórico não relacionado e salto de cadeia):** Atendidos. A busca mapeia estritamente os pré-requisitos diretos da disciplina corrente, rejeitando tentativas de burlar a hierarquia do grafo.
+
+#### 7.2 Casos-Limite
+*   **LIM-01 (Solicitação duplicada):** Parcialmente atendido. O programa barra se a matéria já estiver consolidada no histórico, mas não gerencia uma lista temporária isolada de requisições do semestre corrente antes da efetivação.
+*   **LIM-02 e LIM-03 (Parcialidade de requisitos e Código inexistente):** Atendidos. A lógica booleana interrompe o fluxo na ausência de parte dos requisitos, e a função `encontrar_disciplina()` retorna `-1` de forma segura ao não casar o código digitado com a base de dados.
+
+#### 7.3 Casos de Entrada Inválida
+*   **INV-01 (Grade indisponível):** Parcialmente atendido. A função `carregar_grade()` testa o ponteiro do arquivo e trata a falha definindo o total de disciplinas como zero, embora não exiba exatamente a string textual especificada no contrato semântico.
+*   **INV-02 (Histórico em formato inválido):** Não se aplica diretamente à execução via terminal, pois a robustez da leitura estruturada via `fscanf` aliada à sanitização do *buffer* impede a injeção de tipos escalares incorretos em tempo de execução.

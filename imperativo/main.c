@@ -99,7 +99,7 @@ void carregar_grade(Disciplina grade[], int *num_grade) {
     }
     
     *num_grade = 0;
-    // Lê sequencialmente até encontrar o fim do arquivo (EOF)[cite: 9]
+    // Lê sequencialmente até encontrar o fim do arquivo (EOF)
     while (fscanf(arquivo, "%s %s %d", grade[*num_grade].codigo, grade[*num_grade].nome, &grade[*num_grade].num_pre_requisitos) != EOF) {
         for (int i = 0; i < grade[*num_grade].num_pre_requisitos; i++) {
             fscanf(arquivo, "%s", grade[*num_grade].pre_requisitos[i]);

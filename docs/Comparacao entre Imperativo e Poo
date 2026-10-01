@@ -1,0 +1,58 @@
+# Análise Comparativa: Imperativo vs Orientado a Objetos
+
+**Tag Obrigatória:** `[P4-ETAPA-05]`
+
+## 1. Análise dos Aspectos de Implementação
+
+*   **Representação do estado:** 
+    *   No paradigma imperativo (C), o estado é mantido em variáveis soltas e arranjos estruturados (`structs`), como os vetores `grade` e `banco_alunos`, alocados estaticamente na função `main`. 
+    *   No paradigma orientado a objetos (C#), o estado é descentralizado e armazenado internamente em instâncias de classes, como as listas e coleções privadas dentro de `Aluno`, `GradeCurricular` e `BancoAlunos`.
+*   **Mutabilidade:** 
+    *   A versão imperativa baseia-se na forte mutação de estado através de operadores de atribuição direta e manipulação manual da memória, como sobrescrever variáveis usando `strcpy` e gerenciar índices. 
+    *   A versão OO restringe a mutabilidade através do encapsulamento, expondo coleções apenas como propriedades de leitura (`IReadOnlyList`) e permitindo alterações apenas por métodos validados (ex: `AdicionarDisciplina`).
+*   **Fluxo de controle:** 
+    *   A solução imperativa controla o fluxo de forma explícita com laços `for`, laços lógicos `while(1)` e desvios usando `if`, `break` e `continue`. 
+    *   A solução OO abstrai parte do fluxo delegando chamadas. O validador simplesmente itera sobre uma lista de `IRegraValidacao`, executando o método `Validar()` sem precisar saber como cada regra opera internamente.
+*   **Decomposição do problema:** 
+    *   Na implementação imperativa, o problema foi decomposto em subprogramas funcionais autônomos (procedimentos), separando as ações por funções (`carregar_grade`, `processar_matricula_aluno`). 
+    *   Na OO, a decomposição focou em identificar as entidades do domínio, separando o sistema em objetos com responsabilidades bem definidas (`Aluno`, `Disciplina`, `ValidadorMatricula`).
+*   **Reutilização:** 
+    *   O código imperativo possui baixa reutilização, pois as funções são acopladas às matrizes específicas utilizadas para armazenar os dados. 
+    *   A versão OO atinge alta reutilização, principalmente com o uso da interface `IRegraValidacao`, que permite reutilizar o motor de validação para qualquer nova regra criada.
+*   **Manutenção e facilidade de extensão:** 
+    *   Estender a lógica imperativa exigiria modificar funções existentes, adicionando cadeias de `if/else`, o que dificulta a manutenção e aumenta a chance de quebrar o sistema. 
+    *   Em OO, a extensão é simplificada através de interfaces e polimorfismo. Adicionar uma nova regra de negócio requer apenas criar uma nova classe, sem alterar o código principal do validador.
+*   **Tratamento de erros:** 
+    *   Em C, os erros foram tratados utilizando retornos sinalizadores, como `-1` ao não encontrar uma disciplina, exigindo checagens contínuas na função principal. 
+    *   Em C#, as respostas são empacotadas de forma mais rica e segura usando Tuplas nomeadas (ex: `(bool deferida, string motivo, Disciplina disciplina)`), e o retorno em `HashSets` bloqueia naturalmente duplicatas (como o método `.Add` do C#).
+*   **Efeitos colaterais:** 
+    *   O programa imperativo mistura a lógica de validação com a persistência, gerando forte alteração de estado no sistema operacional ao salvar em arquivo logo após aprovar uma requisição. 
+    *   No programa OO, os efeitos colaterais com arquivos foram estritamente isolados na classe `RepositorioArquivos`, blindando a regra de negócio.
+*   **Facilidade para testar:** 
+    *   A solução em C é difícil de testar de forma isolada, pois as funções exigem todo o bloco de estado das matrizes de disciplinas e alunos configurados. 
+    *   A solução em C# facilita a criação de Testes Unitários independentes, já que cada classe (`RegraPreRequisitos`, `Aluno`) pode ser instanciada e testada sem depender do sistema inteiro.
+*   **Organização do código e Complexidade:** 
+    *   A abordagem imperativa concentra tudo num único arquivo de alta complexidade ciclomática, focado no comportamento. 
+    *   O OO resulta num código mais distribuído, fragmentando a complexidade para o nível das classes, deixando os métodos curtos e expressivos.
+
+---
+
+## 2. Perguntas Reflexivas
+
+**1. Qual problema ficou mais fácil de expressar de forma imperativa?**
+A interação de entrada e saída (I/O) direta do terminal e os laços iniciais de formatação de linha. Ler arquivos de texto proceduralmente linha por linha e preencher matrizes com ponteiros é mais direto no modelo imperativo do que instanciar várias camadas e classes apenas para inicializar o sistema.
+
+**2. Qual problema ficou mais fácil de expressar utilizando orientação a objetos?**
+A verificação das regras de matrícula e a manipulação do histórico dos alunos. Ao encapsular essas coleções nos próprios objetos e delegar a validação, eliminou-se a necessidade de gerenciar índices complexos de matrizes multidimensionais e variáveis passadas por ponteiros (como foi necessário no paradigma imperativo).
+
+**3. Onde a orientação a objetos realmente trouxe vantagem?**
+No isolamento das responsabilidades de persistência e na criação do sistema de regras polimórfico. A interface `IRegraValidacao` permitiu modularizar o que é uma dependência (pré-requisito) do que é um bloqueio padrão (matéria já cursada), permitindo um código extremamente limpo no momento de validar os requisitos do aluno.
+
+**4. Em quais situações a utilização de objetos acrescentou complexidade desnecessária?**
+O modelo de classes pode ser engessado para ações triviais de inicialização e conversão simples de dados estruturados. Criar classes separadas para encapsular os bancos estáticos inteiros, como o `BancoAlunos` e `GradeCurricular` em listas de memória para um escopo temporário que poderia ser um simples `Dictionary` ou lista pura diretamente no *main*, pode introduzir camadas sem muito benefício direto na complexidade final.
+
+**5. Que partes do problema praticamente não mudaram entre as duas implementações?**
+A essência da estrutura base de testes de repetição do sistema do menu, que em ambos utiliza fluxos interativos (como `while`) para obter os dados do terminal (`Console.ReadLine` ou `scanf`), e as regras condicionais lógicas do negócio, tais como recusar estudantes e interromper o processo em caso de pré-requisitos incompletos.
+
+**6. Que partes precisaram ser completamente remodeladas?**
+O fluxo de passagem de parâmetros e a gestão do banco de informações. Na C, as funções autônomas processavam tudo externamente com matrizes cruzadas. Em C#, isso foi virado do avesso: cada `Aluno` se responsabilizou por conhecer e gerir seu histórico e garantir as próprias validações. Além disso, a aplicação pesada de *ifs* foi remodelada substituindo por um arranjo de interfaces dinâmicas, que executam suas lógicas de validação baseadas no objeto acoplado a elas.

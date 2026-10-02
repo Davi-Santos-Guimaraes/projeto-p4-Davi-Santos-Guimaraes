@@ -82,6 +82,7 @@ Possíveis linguagens para cada paradigma e justificativas:
 * [P4-ETAPA-02] [Casos de Teste](./testes/casos.md)
 * [P4-ETAPA-03] [Imperativo](./imperativo/main.c)
 * [P4-ETAPA-04] [Programa Orientado a Objeto](./poo/ProgramaPoo.cs)
+* [P4-ETAPA-05] [COMPARAÇÃO ENTRE IMPERATIVO E POO](./docs/Comparacao_entre_Imperativo_e_Poo.md)
 
 ## Estrutura do Repositório
 
